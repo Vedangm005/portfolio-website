@@ -1,12 +1,30 @@
+import Navbar from "./components/Navbar"
+import Hero from "./components/Hero"
+import Marquee from "./components/Marquee"
+import About from "./components/About"
+import Projects from "./components/Projects"
+import Contact from "./components/Contact"
+import Footer from "./components/Footer"
+import Loader from "./components/Loader"
+import CursorGlow from "./components/CursorGlow"
+import useScrollFade from "./hooks/useScrollFade"
+
 function App() {
+
+  useScrollFade()
+
   return (
-    <div className="bg-black text-white h-screen flex items-center justify-center">
-
-      <h1 className="text-6xl font-bold">
-        Vedang Mishra
-      </h1>
-
-    </div>
+    <>
+      <Loader />
+      <CursorGlow />
+      <Navbar />
+      <Hero />
+      <Marquee />
+      <About />
+      <Projects />
+      <Contact />
+      <Footer />
+    </>
   )
 }
 
