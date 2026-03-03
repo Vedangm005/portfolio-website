@@ -65,9 +65,13 @@ function Navbar() {
         return () => lightSections.forEach(s => observer.unobserve(s))
     }, [])
 
-    // Close mobile menu on scroll
+    // Close mobile menu on scroll (with threshold to avoid spurious mobile taps)
     useEffect(() => {
-        const close = () => setMenuOpen(false)
+        let scrollStart = window.scrollY
+        const onOpen = () => { scrollStart = window.scrollY }
+        const close = () => {
+            if (Math.abs(window.scrollY - scrollStart) > 10) setMenuOpen(false)
+        }
         window.addEventListener("scroll", close)
         return () => window.removeEventListener("scroll", close)
     }, [])
@@ -162,8 +166,8 @@ function Navbar() {
                     }`}
             >
                 <div className={`backdrop-blur-xl border rounded-full px-2 py-1.5 flex items-center gap-0.5 transition-all duration-500 ${isOnLight
-                        ? "bg-black/[0.05] border-black/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.08)]"
-                        : "bg-white/[0.08] border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+                    ? "bg-black/[0.05] border-black/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.08)]"
+                    : "bg-white/[0.08] border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
                     }`}>
 
                     {/* Monogram */}
@@ -222,10 +226,10 @@ function Navbar() {
                     onClick={() => setMenuOpen(false)}
                 />
 
-                {/* Close button */}
+                {/* Close button — large tap target for mobile */}
                 <button
-                    onClick={() => setMenuOpen(false)}
-                    className="absolute top-5 right-6 z-10 w-7 h-5 flex flex-col justify-center items-center"
+                    onClick={(e) => { e.stopPropagation(); setMenuOpen(false) }}
+                    className="absolute top-3 right-4 z-20 w-12 h-12 flex items-center justify-center"
                     aria-label="Close menu"
                 >
                     <span className="absolute w-5 h-[1.5px] bg-white/80 rotate-45" />
