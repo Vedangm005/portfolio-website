@@ -19,41 +19,48 @@ function CursorGlow() {
         let ringY = 0
         let ringSize = 12
         let targetRingSize = 12
+        let dotScale = 1
+        let targetDotScale = 1
         let animationId
         let magnetTarget = null
         let isOnLight = false
+        let currentHoverState = "default" // "default" | "clickable" | "heading"
 
-        // Detect light-background sections (same as Navbar)
+        // ── Section color detection ──
         const lightIds = ["contact"]
-        const lightSections = lightIds.map(id => document.getElementById(id)).filter(Boolean)
+        const lightSections = lightIds
+            .map(id => document.getElementById(id))
+            .filter(Boolean)
+
         let sectionObserver = null
 
         if (lightSections.length) {
             sectionObserver = new IntersectionObserver(
                 (entries) => {
-                    const anyLight = entries.some(e => e.isIntersecting)
-                    isOnLight = anyLight
-                    // Update colors immediately
-                    applyColors()
+                    entries.forEach(e => {
+                        if (e.isIntersecting) isOnLight = true
+                        else isOnLight = false
+                    })
+                    reapplyHoverState()
                 },
-                { rootMargin: "-0px 0px -85% 0px", threshold: 0 }
+                { threshold: 0.15 }
             )
             lightSections.forEach(s => sectionObserver.observe(s))
         }
 
-        // Color helpers
+        // ── Colors ──
         const colors = {
-            dark: { // cursor on dark bg → white cursor
+            dark: {
                 dot: "rgba(255,255,255,0.95)",
                 dotShadow: "0 0 8px rgba(255,255,255,0.4), 0 0 2px rgba(255,255,255,0.8)",
-                ring: "rgba(255,255,255,0.5)",
+                ring: "rgba(255,255,255,0.45)",
                 ringHover: "rgba(255,255,255,0.65)",
                 ringFill: "rgba(255,255,255,0.08)",
-                ringHeading: "rgba(255,255,255,0.35)",
+                ringHeading: "rgba(255,255,255,0.3)",
             },
-            light: { // cursor on light bg → dark cursor
+            light: {
                 dot: "rgba(0,0,0,0.85)",
-                dotShadow: "0 0 8px rgba(0,0,0,0.15), 0 0 2px rgba(0,0,0,0.3)",
+                dotShadow: "0 0 8px rgba(0,0,0,0.12), 0 0 2px rgba(0,0,0,0.3)",
                 ring: "rgba(0,0,0,0.4)",
                 ringHover: "rgba(0,0,0,0.55)",
                 ringFill: "rgba(0,0,0,0.06)",
@@ -61,17 +68,27 @@ function CursorGlow() {
             },
         }
 
-        function getColors() {
-            return isOnLight ? colors.light : colors.dark
-        }
+        const getC = () => isOnLight ? colors.light : colors.dark
 
-        function applyColors() {
-            const c = getColors()
+        // Re-applies correct ring/dot colors for whatever state we're in
+        function reapplyHoverState() {
+            const c = getC()
             dot.style.backgroundColor = c.dot
             dot.style.boxShadow = c.dotShadow
-            ring.style.borderColor = c.ring
+
+            if (currentHoverState === "clickable") {
+                ring.style.borderColor = c.ringHover
+                ring.style.backgroundColor = c.ringFill
+            } else if (currentHoverState === "heading") {
+                ring.style.borderColor = c.ringHeading
+                ring.style.backgroundColor = "transparent"
+            } else {
+                ring.style.borderColor = c.ring
+                ring.style.backgroundColor = "transparent"
+            }
         }
 
+        // ── Mouse events ──
         const onMouseMove = (e) => {
             mouseX = e.clientX
             mouseY = e.clientY
@@ -80,29 +97,29 @@ function CursorGlow() {
         const onMouseOver = (e) => {
             const clickable = e.target.closest("a, button, [role='button'], .cursor-pointer")
             const isHeading = e.target.closest("h1, h2, h3, h4")
-            const c = getColors()
+            const c = getC()
 
             if (clickable) {
+                currentHoverState = "clickable"
                 magnetTarget = clickable
                 targetRingSize = 44
+                targetDotScale = 0.4
                 ring.style.borderColor = c.ringHover
                 ring.style.backgroundColor = c.ringFill
-                dot.style.transform = `translate(${mouseX - 3}px, ${mouseY - 3}px) scale(0.5)`
-                dot.style.opacity = "0.4"
             } else if (isHeading) {
+                currentHoverState = "heading"
                 magnetTarget = null
                 targetRingSize = 52
+                targetDotScale = 1
                 ring.style.borderColor = c.ringHeading
                 ring.style.backgroundColor = "transparent"
-                dot.style.opacity = "1"
-                dot.style.transform = `translate(${mouseX - 3}px, ${mouseY - 3}px) scale(1)`
             } else {
+                currentHoverState = "default"
                 magnetTarget = null
                 targetRingSize = 12
+                targetDotScale = 1
                 ring.style.borderColor = c.ring
                 ring.style.backgroundColor = "transparent"
-                dot.style.opacity = "1"
-                dot.style.transform = `translate(${mouseX - 3}px, ${mouseY - 3}px) scale(1)`
             }
         }
 
@@ -117,38 +134,35 @@ function CursorGlow() {
             ring.style.opacity = "1"
         }
 
-        // On click — quick pulse
         const onMouseDown = () => {
-            targetRingSize = magnetTarget ? 36 : 8
-        }
-        const onMouseUp = () => {
-            targetRingSize = magnetTarget ? 44 : 12
+            targetRingSize = magnetTarget ? 34 : 7
         }
 
+        const onMouseUp = () => {
+            targetRingSize = currentHoverState === "clickable" ? 44 : 12
+        }
+
+        // ── Animation loop ──
         function animate() {
             animationId = requestAnimationFrame(animate)
 
-            // Dot — instant, always follows true mouse
+            // Dot — instant position, lerped scale (no transform transition in CSS)
+            dotScale += (targetDotScale - dotScale) * 0.14
             dot.style.transform =
-                `translate(${mouseX - 3}px, ${mouseY - 3}px)`
+                `translate(${mouseX - 3}px, ${mouseY - 3}px) scale(${dotScale})`
 
-            // Ring destination — pulled toward magnet center if hovering clickable
+            // Ring destination with magnetic pull
             let destX = mouseX
             let destY = mouseY
 
             if (magnetTarget) {
                 const rect = magnetTarget.getBoundingClientRect()
-                const centerX = rect.left + rect.width / 2
-                const centerY = rect.top + rect.height / 2
-                destX = mouseX + (centerX - mouseX) * 0.28
-                destY = mouseY + (centerY - mouseY) * 0.28
+                destX = mouseX + (rect.left + rect.width / 2 - mouseX) * 0.28
+                destY = mouseY + (rect.top + rect.height / 2 - mouseY) * 0.28
             }
 
-            // Smooth ring follow
             ringX += (destX - ringX) * 0.13
             ringY += (destY - ringY) * 0.13
-
-            // Smooth ring size
             ringSize += (targetRingSize - ringSize) * 0.13
 
             ring.style.transform =
@@ -182,20 +196,17 @@ function CursorGlow() {
 
     return (
         <>
-            {/* Outer ring — lags behind, expands on hover */}
             <div
                 ref={ringRef}
                 className="pointer-events-none fixed top-0 left-0 z-[999] rounded-full hidden md:block"
                 style={{
                     width: "12px",
                     height: "12px",
-                    border: "1.5px solid rgba(255,255,255,0.5)",
+                    border: "1.5px solid rgba(255,255,255,0.45)",
                     willChange: "transform, width, height",
-                    transition: "border-color 0.4s ease, background-color 0.4s ease, opacity 0.3s ease",
+                    transition: "border-color 0.35s ease, background-color 0.35s ease, opacity 0.3s ease",
                 }}
             />
-
-            {/* Inner dot — instant follow, always sharp */}
             <div
                 ref={dotRef}
                 className="pointer-events-none fixed top-0 left-0 z-[999] rounded-full hidden md:block"
@@ -205,7 +216,7 @@ function CursorGlow() {
                     backgroundColor: "rgba(255,255,255,0.95)",
                     boxShadow: "0 0 8px rgba(255,255,255,0.4), 0 0 2px rgba(255,255,255,0.8)",
                     willChange: "transform",
-                    transition: "opacity 0.2s ease, transform 0.15s ease, background-color 0.4s ease, box-shadow 0.4s ease",
+                    transition: "opacity 0.2s ease, background-color 0.35s ease, box-shadow 0.35s ease",
                 }}
             />
         </>
