@@ -2,32 +2,75 @@ import { useEffect, useRef } from "react"
 
 function CursorGlow() {
 
-    const cursorRef = useRef(null)
+    const dotRef = useRef(null)
+    const ringRef = useRef(null)
 
     useEffect(() => {
 
         if ("ontouchstart" in window) return
 
-        const cursor = cursorRef.current
-        if (!cursor) return
+        const dot = dotRef.current
+        const ring = ringRef.current
+        if (!dot || !ring) return
 
         let mouseX = 0
         let mouseY = 0
-        let cursorX = 0
-        let cursorY = 0
-
-        // Animated values (lerped in rAF, not CSS)
-        let currentSize = 36
-        let targetSize = 36
-        let currentBorderRadius = 50 // percent
-        let targetBorderRadius = 50
-        let blendMode = "difference"
+        let ringX = 0
+        let ringY = 0
+        let ringSize = 12
+        let targetRingSize = 12
         let animationId
-
-        // Magnetic pull state
         let magnetTarget = null
-        let magnetX = 0
-        let magnetY = 0
+        let isOnLight = false
+
+        // Detect light-background sections (same as Navbar)
+        const lightIds = ["contact"]
+        const lightSections = lightIds.map(id => document.getElementById(id)).filter(Boolean)
+        let sectionObserver = null
+
+        if (lightSections.length) {
+            sectionObserver = new IntersectionObserver(
+                (entries) => {
+                    const anyLight = entries.some(e => e.isIntersecting)
+                    isOnLight = anyLight
+                    // Update colors immediately
+                    applyColors()
+                },
+                { rootMargin: "-0px 0px -85% 0px", threshold: 0 }
+            )
+            lightSections.forEach(s => sectionObserver.observe(s))
+        }
+
+        // Color helpers
+        const colors = {
+            dark: { // cursor on dark bg → white cursor
+                dot: "rgba(255,255,255,0.95)",
+                dotShadow: "0 0 8px rgba(255,255,255,0.4), 0 0 2px rgba(255,255,255,0.8)",
+                ring: "rgba(255,255,255,0.5)",
+                ringHover: "rgba(255,255,255,0.65)",
+                ringFill: "rgba(255,255,255,0.08)",
+                ringHeading: "rgba(255,255,255,0.35)",
+            },
+            light: { // cursor on light bg → dark cursor
+                dot: "rgba(0,0,0,0.85)",
+                dotShadow: "0 0 8px rgba(0,0,0,0.15), 0 0 2px rgba(0,0,0,0.3)",
+                ring: "rgba(0,0,0,0.4)",
+                ringHover: "rgba(0,0,0,0.55)",
+                ringFill: "rgba(0,0,0,0.06)",
+                ringHeading: "rgba(0,0,0,0.25)",
+            },
+        }
+
+        function getColors() {
+            return isOnLight ? colors.light : colors.dark
+        }
+
+        function applyColors() {
+            const c = getColors()
+            dot.style.backgroundColor = c.dot
+            dot.style.boxShadow = c.dotShadow
+            ring.style.borderColor = c.ring
+        }
 
         const onMouseMove = (e) => {
             mouseX = e.clientX
@@ -35,86 +78,61 @@ function CursorGlow() {
         }
 
         const onMouseOver = (e) => {
-            const el = e.target
+            const clickable = e.target.closest("a, button, [role='button'], .cursor-pointer")
+            const isHeading = e.target.closest("h1, h2, h3, h4")
+            const c = getColors()
 
-            // Images — disable inversion, show subtle ring instead
-            const isImage = el.closest("img, .cursor-no-invert")
-            if (isImage) {
-                blendMode = "normal"
-                cursor.style.mixBlendMode = "normal"
-                cursor.style.backgroundColor = "transparent"
-                cursor.style.border = "2px solid rgba(255,255,255,0.5)"
-                targetSize = 48
-                magnetTarget = null
-                return
-            }
-
-            // Interactive elements — grow + magnetic snap
-            const clickable = el.closest("a, button, [role='button'], .cursor-pointer")
             if (clickable) {
-                targetSize = 48
-                targetBorderRadius = 50
                 magnetTarget = clickable
-                // Reset to difference mode
-                blendMode = "difference"
-                cursor.style.mixBlendMode = "difference"
-                cursor.style.backgroundColor = "white"
-                cursor.style.border = "none"
-                return
-            }
-
-            // Headings — subtle grow
-            const isHeading = el.closest("h1, h2, h3")
-            if (isHeading) {
-                targetSize = 56
-                targetBorderRadius = 50
+                targetRingSize = 44
+                ring.style.borderColor = c.ringHover
+                ring.style.backgroundColor = c.ringFill
+                dot.style.transform = `translate(${mouseX - 3}px, ${mouseY - 3}px) scale(0.5)`
+                dot.style.opacity = "0.4"
+            } else if (isHeading) {
                 magnetTarget = null
-                blendMode = "difference"
-                cursor.style.mixBlendMode = "difference"
-                cursor.style.backgroundColor = "white"
-                cursor.style.border = "none"
-                return
-            }
-
-            // Text — morph to thin vertical bar
-            const isText = el.closest("p, span, li, label")
-            if (isText && !clickable) {
-                targetSize = 28
-                targetBorderRadius = 50
+                targetRingSize = 52
+                ring.style.borderColor = c.ringHeading
+                ring.style.backgroundColor = "transparent"
+                dot.style.opacity = "1"
+                dot.style.transform = `translate(${mouseX - 3}px, ${mouseY - 3}px) scale(1)`
+            } else {
                 magnetTarget = null
-                blendMode = "difference"
-                cursor.style.mixBlendMode = "difference"
-                cursor.style.backgroundColor = "white"
-                cursor.style.border = "none"
-                return
+                targetRingSize = 12
+                ring.style.borderColor = c.ring
+                ring.style.backgroundColor = "transparent"
+                dot.style.opacity = "1"
+                dot.style.transform = `translate(${mouseX - 3}px, ${mouseY - 3}px) scale(1)`
             }
-
-            // Default
-            targetSize = 36
-            targetBorderRadius = 50
-            magnetTarget = null
-            blendMode = "difference"
-            cursor.style.mixBlendMode = "difference"
-            cursor.style.backgroundColor = "white"
-            cursor.style.border = "none"
         }
 
         const onMouseLeave = () => {
-            cursor.style.opacity = "0"
+            dot.style.opacity = "0"
+            ring.style.opacity = "0"
+            magnetTarget = null
         }
 
         const onMouseEnter = () => {
-            cursor.style.opacity = "1"
+            dot.style.opacity = "1"
+            ring.style.opacity = "1"
+        }
+
+        // On click — quick pulse
+        const onMouseDown = () => {
+            targetRingSize = magnetTarget ? 36 : 8
+        }
+        const onMouseUp = () => {
+            targetRingSize = magnetTarget ? 44 : 12
         }
 
         function animate() {
             animationId = requestAnimationFrame(animate)
 
-            // Smooth size interpolation
-            currentSize += (targetSize - currentSize) * 0.15
-            currentBorderRadius += (targetBorderRadius - currentBorderRadius) * 0.15
+            // Dot — instant, always follows true mouse
+            dot.style.transform =
+                `translate(${mouseX - 3}px, ${mouseY - 3}px)`
 
-            // Magnetic pull toward center of hovered element
+            // Ring destination — pulled toward magnet center if hovering clickable
             let destX = mouseX
             let destY = mouseY
 
@@ -122,28 +140,29 @@ function CursorGlow() {
                 const rect = magnetTarget.getBoundingClientRect()
                 const centerX = rect.left + rect.width / 2
                 const centerY = rect.top + rect.height / 2
-
-                // Pull 30% toward center of element
-                destX = mouseX + (centerX - mouseX) * 0.3
-                destY = mouseY + (centerY - mouseY) * 0.3
+                destX = mouseX + (centerX - mouseX) * 0.28
+                destY = mouseY + (centerY - mouseY) * 0.28
             }
 
-            // Smooth follow
-            cursorX += (destX - cursorX) * 0.14
-            cursorY += (destY - cursorY) * 0.14
+            // Smooth ring follow
+            ringX += (destX - ringX) * 0.13
+            ringY += (destY - ringY) * 0.13
 
-            const halfSize = currentSize / 2
-            cursor.style.transform =
-                `translate(${cursorX - halfSize}px, ${cursorY - halfSize}px)`
-            cursor.style.width = `${currentSize}px`
-            cursor.style.height = `${currentSize}px`
-            cursor.style.borderRadius = `${currentBorderRadius}%`
+            // Smooth ring size
+            ringSize += (targetRingSize - ringSize) * 0.13
+
+            ring.style.transform =
+                `translate(${ringX - ringSize / 2}px, ${ringY - ringSize / 2}px)`
+            ring.style.width = `${ringSize}px`
+            ring.style.height = `${ringSize}px`
         }
 
         document.addEventListener("mousemove", onMouseMove)
         document.addEventListener("mouseover", onMouseOver)
         document.addEventListener("mouseleave", onMouseLeave)
         document.addEventListener("mouseenter", onMouseEnter)
+        document.addEventListener("mousedown", onMouseDown)
+        document.addEventListener("mouseup", onMouseUp)
         animate()
 
         return () => {
@@ -152,23 +171,44 @@ function CursorGlow() {
             document.removeEventListener("mouseover", onMouseOver)
             document.removeEventListener("mouseleave", onMouseLeave)
             document.removeEventListener("mouseenter", onMouseEnter)
+            document.removeEventListener("mousedown", onMouseDown)
+            document.removeEventListener("mouseup", onMouseUp)
+            if (sectionObserver) {
+                lightSections.forEach(s => sectionObserver.unobserve(s))
+            }
         }
 
     }, [])
 
     return (
-        <div
-            ref={cursorRef}
-            className="pointer-events-none fixed top-0 left-0 z-[999] rounded-full hidden md:block"
-            style={{
-                width: "36px",
-                height: "36px",
-                backgroundColor: "white",
-                mixBlendMode: "difference",
-                willChange: "transform",
-                transition: "opacity 0.3s ease",
-            }}
-        />
+        <>
+            {/* Outer ring — lags behind, expands on hover */}
+            <div
+                ref={ringRef}
+                className="pointer-events-none fixed top-0 left-0 z-[999] rounded-full hidden md:block"
+                style={{
+                    width: "12px",
+                    height: "12px",
+                    border: "1.5px solid rgba(255,255,255,0.5)",
+                    willChange: "transform, width, height",
+                    transition: "border-color 0.4s ease, background-color 0.4s ease, opacity 0.3s ease",
+                }}
+            />
+
+            {/* Inner dot — instant follow, always sharp */}
+            <div
+                ref={dotRef}
+                className="pointer-events-none fixed top-0 left-0 z-[999] rounded-full hidden md:block"
+                style={{
+                    width: "6px",
+                    height: "6px",
+                    backgroundColor: "rgba(255,255,255,0.95)",
+                    boxShadow: "0 0 8px rgba(255,255,255,0.4), 0 0 2px rgba(255,255,255,0.8)",
+                    willChange: "transform",
+                    transition: "opacity 0.2s ease, transform 0.15s ease, background-color 0.4s ease, box-shadow 0.4s ease",
+                }}
+            />
+        </>
     )
 }
 

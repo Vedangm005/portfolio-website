@@ -65,7 +65,7 @@ function About() {
                 </motion.div>
 
                 {/* Headline + Photo */}
-                <div className="grid md:grid-cols-[1.1fr_auto] gap-16 items-center mb-28">
+                <div className="grid md:grid-cols-[1.1fr_auto] gap-10 md:gap-16 items-center mb-20 md:mb-28">
 
                     <div>
                         <motion.h2
@@ -140,7 +140,7 @@ function About() {
                 </div>
 
                 {/* Bottom Section */}
-                <div className="grid md:grid-cols-[1fr_1px_1fr] gap-0">
+                <div className="grid md:grid-cols-[1fr_1px_1fr] gap-0 md:gap-0">
 
                     <div className="pr-0 md:pr-14 space-y-6">
 
@@ -178,7 +178,7 @@ function About() {
                             whileInView="visible"
                             custom={3}
                             viewport={{ once: true }}
-                            className="mt-10 pt-8 border-t border-white/[0.07] flex flex-wrap gap-x-10 gap-y-6"
+                            className="mt-10 pt-8 border-t border-white/[0.07] flex flex-wrap gap-x-10 gap-y-6 pb-2"
                         >
                             {stats.map((s, i) => (
                                 <div key={i}>
@@ -196,18 +196,18 @@ function About() {
                     <div className="hidden md:block mx-12 self-stretch bg-gradient-to-b from-transparent via-white/[0.07] to-transparent" />
 
                     {/* Skills */}
-                    <div>
+                    <div className="mt-14 md:mt-0 pt-10 md:pt-0 border-t border-white/[0.07] md:border-t-0">
                         <motion.p
                             variants={fadeUp}
                             initial="hidden"
                             whileInView="visible"
                             viewport={{ once: true }}
-                            className="text-[10px] uppercase tracking-[0.3em] text-white/25 font-medium mb-6"
+                            className="text-[10px] uppercase tracking-[0.3em] text-white/25 font-medium mb-8"
                         >
                             Tools & Technologies
                         </motion.p>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 gap-3 md:gap-4">
                             {skillGroups.map((group, gi) => (
                                 <motion.div
                                     key={group.label}
@@ -218,7 +218,7 @@ function About() {
                                     viewport={{ once: true }}
                                     whileHover={{ y: -4 }}
                                     transition={{ type: "spring", stiffness: 300, damping: 18 }}
-                                    className="group relative rounded-xl p-4 bg-white/[0.02] border border-white/[0.07] overflow-hidden transition-all duration-300 hover:border-white/[0.15]"
+                                    className="group relative rounded-xl p-3.5 md:p-4 bg-white/[0.02] border border-white/[0.07] overflow-hidden transition-all duration-300 hover:border-white/[0.15]"
                                 >
                                     <div className="text-[9px] uppercase tracking-[0.2em] text-white/25 font-medium mb-3">
                                         {group.label}
@@ -228,7 +228,7 @@ function About() {
                                         {group.skills.map(skill => (
                                             <span
                                                 key={skill}
-                                                className="text-[11px] px-3 py-1 rounded-full border border-white/[0.08] text-white/40 transition-all duration-300 hover:border-white/25 hover:text-white hover:shadow-[0_0_12px_rgba(255,255,255,0.15)] hover:-translate-y-0.5"
+                                                className="text-[10px] md:text-[11px] px-2.5 md:px-3 py-1 rounded-full border border-white/[0.08] text-white/40 transition-all duration-300 hover:border-white/25 hover:text-white hover:shadow-[0_0_12px_rgba(255,255,255,0.15)] hover:-translate-y-0.5"
                                             >
                                                 {skill}
                                             </span>
