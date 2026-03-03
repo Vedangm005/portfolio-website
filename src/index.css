@@ -2,16 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===============================
+   Global Base
+================================ */
+
 html {
     scroll-behavior: smooth;
 }
 
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Satoshi', sans-serif;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: #000;
 }
+
+/* Improve heading typography */
+h1,
+h2,
+h3,
+h4 {
+    letter-spacing: -0.02em;
+}
+
+/* ===============================
+   Cursor Hide (Desktop Only)
+================================ */
 
 @media (min-width: 768px) {
 
@@ -22,17 +39,25 @@ body {
     }
 }
 
+/* ===============================
+   Text Selection
+================================ */
+
 ::selection {
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(255, 255, 255, 0.15);
     color: white;
 }
 
-/* Fade-in on scroll */
+/* ===============================
+   Scroll Fade Section
+================================ */
+
 .fade-section {
     opacity: 0;
     transform: translateY(50px);
-    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
-        transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    transition:
+        opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .fade-section.visible {
@@ -40,7 +65,27 @@ body {
     transform: translateY(0);
 }
 
-/* Staggered animation delays */
+/* ===============================
+   Scroll Reveal (Refined)
+================================ */
+
+.scroll-reveal {
+    opacity: 0;
+    transform: translateY(40px) scale(0.98);
+    transition:
+        opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scroll-reveal.revealed {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* ===============================
+   Stagger Helpers
+================================ */
+
 .delay-1 {
     animation-delay: 0.1s;
 }
@@ -61,7 +106,10 @@ body {
     animation-delay: 0.7s;
 }
 
-/* Interactive link underline */
+/* ===============================
+   Link Underline Animation
+================================ */
+
 .link-hover {
     position: relative;
     display: inline-block;
@@ -75,9 +123,107 @@ body {
     width: 0;
     height: 1px;
     background: currentColor;
-    transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .link-hover:hover::after {
     width: 100%;
+}
+
+/* ===============================
+   Nav Link Hover
+================================ */
+
+.nav-link-hover {
+    position: relative;
+}
+
+.nav-link-hover::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: currentColor;
+    transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nav-link-hover:hover::after {
+    width: 100%;
+}
+
+/* ===============================
+   Typewriter Cursor
+================================ */
+
+@keyframes blink {
+
+    0%,
+    50% {
+        opacity: 1;
+    }
+
+    51%,
+    100% {
+        opacity: 0;
+    }
+}
+
+.animate-blink {
+    animation: blink 0.8s step-end infinite;
+}
+
+/* ===============================
+   Scroll Dot Animation
+================================ */
+
+@keyframes scrollDot {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    50% {
+        transform: translateY(10px);
+        opacity: 0.3;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.animate-scroll-dot {
+    animation: scrollDot 1.8s ease-in-out infinite;
+}
+
+/* ===============================
+   Subtle Grain Overlay
+================================ */
+
+.grain-overlay {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+    opacity: 0.035;
+    mix-blend-mode: overlay;
+}
+
+/* ===============================
+   Soft Depth Text Shadow
+================================ */
+
+.text-soft-shadow {
+    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* ===============================
+   Smooth Motion Defaults
+================================ */
+
+* {
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
