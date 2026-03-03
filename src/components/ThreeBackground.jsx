@@ -135,9 +135,9 @@ function ThreeBackground() {
             pos[i3 + 1] = base[i3 + 1]
             pos[i3 + 2] = base[i3 + 2]
 
-            vel[i3] = (Math.random() - 0.5) * 0.0012
-            vel[i3 + 1] = (Math.random() - 0.5) * 0.0012
-            vel[i3 + 2] = (Math.random() - 0.5) * 0.0012
+            vel[i3] = (Math.random() - 0.5) * 0.005
+            vel[i3 + 1] = (Math.random() - 0.5) * 0.005
+            vel[i3 + 2] = (Math.random() - 0.5) * 0.005
 
         }
 
@@ -272,11 +272,8 @@ function ThreeBackground() {
 
             // Smooth mouse
 
-            mouse.x +=
-                (mouse.targetX - mouse.x) * 0.07
-
-            mouse.y +=
-                (mouse.targetY - mouse.y) * 0.07
+            mouse.x += (mouse.targetX - mouse.x) * 0.12
+            mouse.y += (mouse.targetY - mouse.y) * 0.12
 
 
             let index = 0
@@ -383,11 +380,8 @@ function ThreeBackground() {
 
             // Strong Mouse Motion
 
-            camera.position.x +=
-                (mouse.x * 1.2 - camera.position.x) * 0.05
-
-            camera.position.y +=
-                (-mouse.y * 0.8 - camera.position.y) * 0.05
+            camera.position.x += (mouse.x * 2.0 - camera.position.x) * 0.09
+            camera.position.y += (-mouse.y * 1.4 - camera.position.y) * 0.09
 
 
             camera.lookAt(0, 0, 0)

@@ -227,3 +227,43 @@ h4 {
 * {
     transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+/* ===============================
+   Scrollbar Hide (for thumbnail strips)
+================================ */
+
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+.section-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: rgba(255, 255, 255, 0.25);
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+.section-text {
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.9;
+    font-size: 15px;
+}
+
+.case-link {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: rgba(255, 255, 255, 0.6);
+    transition: all 0.3s ease;
+}
+
+.case-link:hover {
+    color: white;
+}
