@@ -267,3 +267,75 @@ h4 {
 .case-link:hover {
     color: white;
 }
+
+/* ===============================
+   Skip to Content (Accessibility)
+================================ */
+
+.skip-link {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    z-index: 9999;
+    padding: 12px 24px;
+    background: #000;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+}
+
+.skip-link:focus {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    width: auto;
+    height: auto;
+}
+
+/* ===============================
+   Focus Visible (Keyboard Nav)
+================================ */
+
+*:focus-visible {
+    outline: 2px solid rgba(52, 211, 153, 0.7);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+button:focus-visible,
+a:focus-visible {
+    outline: 2px solid rgba(52, 211, 153, 0.7);
+    outline-offset: 3px;
+}
+
+/* ===============================
+   Reduced Motion Preference
+================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .fade-section {
+        opacity: 1;
+        transform: none;
+    }
+
+    .scroll-reveal {
+        opacity: 1;
+        transform: none;
+    }
+}

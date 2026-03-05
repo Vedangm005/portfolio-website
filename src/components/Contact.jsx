@@ -52,6 +52,7 @@ function Contact() {
                             rel="noopener noreferrer"
                             onMouseEnter={() => setHovered(i)}
                             onMouseLeave={() => setHovered(null)}
+                            aria-label={`${label}: ${display}`}
                             className="group relative bg-white p-8 md:p-10 flex flex-col justify-between gap-8 overflow-hidden transition-colors duration-300 hover:bg-black/[0.02]"
                         >
 

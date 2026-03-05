@@ -122,10 +122,13 @@ function About() {
                             }}
                             transition={{ type: "spring", stiffness: 200, damping: 15 }}
                             className="relative w-[230px] md:w-[260px] aspect-[3/4] rounded-[24px] overflow-hidden border border-white/[0.1] shadow-[0_25px_70px_rgba(0,0,0,0.6)] transform-gpu"
+                            role="img"
+                            aria-label="Photo of Vedang Mishra"
                         >
                             <img
                                 src={vedangPhoto}
                                 alt="Vedang Mishra"
+                                loading="lazy"
                                 className="w-full h-full object-cover object-top"
                             />
 

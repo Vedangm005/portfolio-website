@@ -1,5 +1,6 @@
-import { useEffect, useState, useRef } from "react"
-import ThreeBackground from "./ThreeBackground"
+import { useEffect, useState, useRef, lazy, Suspense } from "react"
+
+const ThreeBackground = lazy(() => import("./ThreeBackground"))
 
 const roles = [
     "Electronics & Computer Science Student",
@@ -67,14 +68,16 @@ function Hero() {
     }
 
     return (
-        <section className="relative min-h-screen bg-black flex items-center overflow-hidden">
+        <section id="main-content" className="relative min-h-screen bg-black flex items-center overflow-hidden" role="banner" aria-label="Hero section">
 
             {/* Background Parallax */}
             <div
                 className="absolute inset-0"
                 style={{ transform: `translateY(${offset * 0.2}px)` }}
             >
-                <ThreeBackground />
+                <Suspense fallback={<div className="absolute inset-0 bg-black" />}>
+                    <ThreeBackground />
+                </Suspense>
             </div>
 
             {/* Gradient overlays for depth */}
@@ -89,7 +92,7 @@ function Hero() {
                 <div className={`transition-all duration-1000 ease-out ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
 
                     {/* Availability badge */}
-                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/[0.06] mb-7 md:mb-9">
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/[0.06] mb-7 md:mb-9" aria-label="Currently open to opportunities">
                         <span className="relative flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -141,6 +144,17 @@ function Hero() {
                         >
                             Get in Touch
                         </button>
+
+                        <a
+                            href="/resume.pdf"
+                            download
+                            className="group px-6 py-3 md:px-8 md:py-3.5 border border-white/10 text-white/50 text-sm md:text-base font-medium rounded-full transition-all duration-300 hover:border-white/30 hover:text-white hover:bg-white/5 hover:scale-105 active:scale-95 flex items-center gap-2"
+                        >
+                            <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Resume
+                        </a>
                     </div>
 
                 </div>

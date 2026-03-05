@@ -136,7 +136,7 @@ function Navbar() {
                             className={`text-[13px] transition-colors duration-300 tracking-wide flex items-center gap-1.5 nav-link-hover ${isOnLight ? "text-black/40 hover:text-black/90" : "text-white/40 hover:text-white/90"
                                 }`}
                         >
-                            Résumé
+                            Resume
                             <svg className="w-3 h-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M7 17L17 7M17 7H7M17 7v10" />
                             </svg>
@@ -204,7 +204,7 @@ function Navbar() {
                         rel="noopener noreferrer"
                         className={`px-3 py-2 transition-colors duration-300 ${isOnLight ? "text-black/50 hover:text-black" : "text-white/50 hover:text-white"
                             }`}
-                        title="Résumé"
+                        title="Resume"
                     >
                         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -265,7 +265,7 @@ function Navbar() {
                             }`}
                         style={{ transitionDelay: menuOpen ? "500ms" : "0ms" }}
                     >
-                        Résumé
+                        Resume
                         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M7 17L17 7M17 7H7M17 7v10" />
                         </svg>
