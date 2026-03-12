@@ -42,7 +42,7 @@ const projects = [
         gallery: [spider],
         demoVideo: null,
         liveUrl: null,
-        githubUrl: "https://github.com/Vedangm005/spider-robot",
+        githubUrl: "https://github.com/Vedangm005/spider-esp32-surveillance-robot",
     },
     {
         title: "Sahaya Setu",
@@ -66,7 +66,7 @@ const projects = [
             "Designed and developed the web admin portal. Integrated the citizen-facing app and admin dashboard using Supabase for authentication, database management, and backend connectivity.",
         gallery: [sahaya],
         demoVideo: null,
-        liveUrl: null,
+        liveUrl: "https://sahaya-setu.vercel.app/login",
         githubUrl: "https://github.com/Vedangm005/sahaya-setu",
     },
 ]
