@@ -13,6 +13,12 @@ const contacts = [
         href: "https://github.com/Vedangm005",
         desc: "See what I'm building",
     },
+    {
+        label: "LinkedIn",
+        display: "Vedang Mishra",
+        href: "https://linkedin.com/in/vedang-mishra",
+        desc: "Let's connect professionally",
+    },
 ]
 
 function Contact() {
@@ -43,7 +49,7 @@ function Contact() {
                 </div>
 
                 {/* Contact Cards */}
-                <div className="mt-16 md:mt-20 grid grid-cols-1 md:grid-cols-2 gap-px bg-black/8 border border-black/8">
+                <div className="mt-16 md:mt-20 grid grid-cols-1 lg:grid-cols-3 gap-px bg-black/8 border border-black/8">
                     {contacts.map(({ label, display, href, desc }, i) => (
                         <a
                             key={i}

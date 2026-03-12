@@ -205,7 +205,7 @@ function About() {
                             initial="hidden"
                             whileInView="visible"
                             viewport={{ once: true }}
-                            className="text-[10px] uppercase tracking-[0.3em] text-white/25 font-medium mb-8"
+                            className="text-[11px] uppercase tracking-[0.3em] text-white/50 font-semibold mb-8"
                         >
                             Tools & Technologies
                         </motion.p>
@@ -221,9 +221,9 @@ function About() {
                                     viewport={{ once: true }}
                                     whileHover={{ y: -4 }}
                                     transition={{ type: "spring", stiffness: 300, damping: 18 }}
-                                    className="group relative rounded-xl p-3.5 md:p-4 bg-white/[0.02] border border-white/[0.07] overflow-hidden transition-all duration-300 hover:border-white/[0.15]"
+                                    className="group relative rounded-xl p-3.5 md:p-4 bg-white/[0.04] border border-white/[0.12] overflow-hidden transition-all duration-300 hover:border-white/[0.25] hover:bg-white/[0.06] hover:shadow-[0_0_25px_rgba(255,255,255,0.05)]"
                                 >
-                                    <div className="text-[9px] uppercase tracking-[0.2em] text-white/25 font-medium mb-3">
+                                    <div className="text-[9px] uppercase tracking-[0.2em] text-white/45 font-semibold mb-3">
                                         {group.label}
                                     </div>
 
@@ -231,7 +231,7 @@ function About() {
                                         {group.skills.map(skill => (
                                             <span
                                                 key={skill}
-                                                className="text-[10px] md:text-[11px] px-2.5 md:px-3 py-1 rounded-full border border-white/[0.08] text-white/40 transition-all duration-300 hover:border-white/25 hover:text-white hover:shadow-[0_0_12px_rgba(255,255,255,0.15)] hover:-translate-y-0.5"
+                                                className="text-[10px] md:text-[11px] px-3 py-1.5 rounded-full border border-white/[0.2] bg-white/[0.04] text-white/80 font-medium transition-all duration-300 hover:border-white/40 hover:text-white hover:bg-white/[0.08] hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] hover:-translate-y-0.5"
                                             >
                                                 {skill}
                                             </span>

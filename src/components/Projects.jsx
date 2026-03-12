@@ -42,7 +42,7 @@ const projects = [
         gallery: [spider],
         demoVideo: null,
         liveUrl: null,
-        githubUrl: null,
+        githubUrl: "https://github.com/Vedangm005/spider-robot",
     },
     {
         title: "Sahaya Setu",
@@ -67,7 +67,7 @@ const projects = [
         gallery: [sahaya],
         demoVideo: null,
         liveUrl: null,
-        githubUrl: null,
+        githubUrl: "https://github.com/Vedangm005/sahaya-setu",
     },
 ]
 
@@ -141,8 +141,8 @@ function Projects() {
                             role="tab"
                             aria-selected={activeFilter === cat}
                             className={`px-5 py-2 rounded-full text-xs md:text-[13px] font-medium tracking-wide transition-all duration-300 ${activeFilter === cat
-                                    ? "bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.1)]"
-                                    : "border border-white/[0.12] text-white/40 hover:text-white hover:border-white/30 hover:bg-white/[0.04]"
+                                ? "bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+                                : "border border-white/[0.12] text-white/40 hover:text-white hover:border-white/30 hover:bg-white/[0.04]"
                                 }`}
                         >
                             {cat}
@@ -202,7 +202,7 @@ function Projects() {
                                                 ))}
                                             </div>
 
-                                            <div className="mt-10">
+                                            <div className="mt-10 flex flex-wrap items-center gap-6">
                                                 <button
                                                     onClick={() => handleToggle(originalIndex)}
                                                     className="group flex items-center gap-2 text-sm uppercase tracking-[0.2em] text-white/60 hover:text-white transition"
@@ -216,6 +216,28 @@ function Projects() {
                                                         →
                                                     </span>
                                                 </button>
+
+                                                {project.githubUrl && (
+                                                    <a
+                                                        href={project.githubUrl}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="flex items-center gap-1 text-sm uppercase tracking-[0.2em] text-white/60 hover:text-white transition"
+                                                    >
+                                                        GitHub ↗
+                                                    </a>
+                                                )}
+
+                                                {project.liveUrl && (
+                                                    <a
+                                                        href={project.liveUrl}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="flex items-center gap-1 text-sm uppercase tracking-[0.2em] text-white/60 hover:text-white transition"
+                                                    >
+                                                        Live ↗
+                                                    </a>
+                                                )}
                                             </div>
                                         </div>
 
